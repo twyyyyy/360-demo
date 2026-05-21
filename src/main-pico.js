@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { VRButton } from "three/addons/webxr/VRButton.js";
+import panoramaUrl from "./assets/360.jpg";
 import "./style.css";
 
 let scene; 
@@ -23,7 +24,7 @@ function init(){
   document.body.appendChild(VRButton.createButton(renderer)); // add a vr button to the webpage. 
   
   var loader = new THREE.TextureLoader(); // create texture loader 
-  loader.load("/src/assets/360.jpg", function( texture ) { //load 360 panoramic image
+  loader.load(panoramaUrl, function( texture ) { //load 360 panoramic image
     var sphereGeometry = new THREE.SphereGeometry( 500, 60, 40 ) // create sphere geometry (radius, width, height)
     var sphereMaterial = new THREE.MeshBasicMaterial({ // create sphere material
       map: texture, // apply 360 image as texture 
