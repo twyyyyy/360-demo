@@ -19,6 +19,7 @@ function init(){
   renderer = new THREE.WebGLRenderer({ // create renderer 
     antialias: true // smooth jagged edges
   });
+  renderer.setPixelRatio(window.devicePixelRatio); // Use the screen’s pixel density for sharper rendering, capped at 2 for better performance.
   renderer.setSize(window.innerWidth,window.innerHeight); // set renderer size 
   document.body.appendChild( renderer.domElement ); // add renderer to webpage
 
@@ -36,6 +37,7 @@ function init(){
     mesh.position.set( 0, 0, 0 ); // position sphere at centre of the scene 
     scene.add( mesh ); // add mesh to the scene 
   })
+
 }
 
 function render () {

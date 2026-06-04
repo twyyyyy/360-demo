@@ -18,24 +18,27 @@ function init(){
   renderer = new THREE.WebGLRenderer({ // create renderer 
     antialias: true // smooth jagged edges
   });
+  renderer.setPixelRatio(window.devicePixelRatio); // Use the screen’s pixel density for sharper rendering, capped at 2 for better performance.
   renderer.setSize(window.innerWidth,window.innerHeight); // set renderer size 
   document.body.appendChild( renderer.domElement ); // add renderer to webpage
   renderer.xr.enabled = true; // enable webxr support in threejs 
   document.body.appendChild(VRButton.createButton(renderer)); // add a vr button to the webpage. 
   
-  var loader = new THREE.TextureLoader(); // create texture loader 
-  loader.load(panoramaUrl, function( texture ) { //load 360 panoramic image
-    var sphereGeometry = new THREE.SphereGeometry( 500, 60, 40 ) // create sphere geometry (radius, width, height)
-    var sphereMaterial = new THREE.MeshBasicMaterial({ // create sphere material
-      map: texture, // apply 360 image as texture 
-      side: THREE.DoubleSide // render both sides of the sphere 
-    })
-   
-    sphereGeometry.scale( -1, 1, 1 ); // flip the sphere so the camera views the image from inside 
-    var mesh = new THREE.Mesh( sphereGeometry, sphereMaterial ); // create the mesh using the geometry and material 
-    mesh.position.set( 0, 0, 0 ); // position sphere at the centre of the scene 
-    scene.add( mesh ); // add mesh to the scene 
-  })
+  const video = document.getElementById("video"); // get video html element 
+  video.onloadeddata = function () { // play once enough video data has loaded 
+      video.play();
+  };
+  
+  const videoTexture = new THREE.VideoTexture(video); // create the video texture 
+  videoTexture.needsUpdate = true;
+  const videoMaterial = new THREE.MeshBasicMaterial({ // creates the sphere material 
+      map: videoTexture, // use the video as the surface image of the sphere 
+      side: THREE.BackSide, // renders the inside surface of the sphere 
+  });
+
+  const sphereGeometry = new THREE.SphereGeometry( 500, 60, 40 ); // create sphere geometry (radius, width, height)
+  const videoScreen = new THREE.Mesh(sphereGeometry, videoMaterial); // create the mesh using the geometry and material 
+  scene.add(videoScreen); // add mesh to the scene 
   renderer.setAnimationLoop(render); // start the webxr render loop 
 }
 
